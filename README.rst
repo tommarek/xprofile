@@ -80,3 +80,8 @@ repository.
 .. _AUR package: https://aur.archlinux.org/packages/xprofile/
 .. _here: https://pypi.python.org/pypi/xprofile
 .. _LICENSE: https://github.com/nrocco/xprofile/blob/master/LICENSE
+
+
+TODO
+- do not parse xrandr output, use libraries instead. Something like in https://github.com/meehow/python-xrandr
+- in the meantime do not use mode name for mode_dimensions, parse them from `xrandr --verbose` h: and v: lines

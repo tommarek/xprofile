@@ -50,6 +50,7 @@ class Display(dict):
         self['edid'] = []
         self['modes'] = {}
         self['geometry'] = None
+        self['scale'] = None
         super(Display, self).__init__(*args, **kwargs)
 
     def get_xrandr_options(self):
@@ -79,6 +80,9 @@ class Display(dict):
 
         if self['rotation']:
             line += ['--rotate', self['rotation']]
+
+        if self['scale']:
+            line += ['--scale', self['scale']]
 
         return line
 
@@ -130,6 +134,19 @@ class Xrandr(object):
                     'current': parts.group('current') != None,
                     'preferred': parts.group('preferred') != None,
                 }
+
+                # get display scale (we only care about current mode)
+                display = screen['displays'][-1]
+                if display['geometry']['dimension'] and parts.group('current'):
+                    disp_geometry = display['geometry']['dimension'].split('x')
+                    mode_dimensions = parts.group('dimension').split('x')
+                    assert(len(disp_geometry) == len(mode_dimensions))
+
+                    display['scale'] = "%.2fx%.2f" % tuple([
+                        float(disp_geometry[i]) / float(mode_dimensions[i])
+                        for i in range(len(disp_geometry))
+                    ])
+
                 continue
 
         return screen
